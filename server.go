@@ -10,6 +10,7 @@ import (
 
 // Db connection
 var db *gorm.DB
+var err error
 
 func init() {
 	// createschema is idempotent
@@ -20,7 +21,7 @@ func init() {
 	if err != nil {
 		panic("failed to connect to database")
 	}
-	fmt.Println("db connection established.")
+	fmt.Println("db connection established...")
 }
 
 func main() {
@@ -30,7 +31,7 @@ func main() {
 
 	// routes
 	router.GET("/products", getAll)
-	//router.GET("/products/:id", getOne)
+	router.GET("/products/:code", getOne)
 
 	router.Run(":4531")
 
@@ -39,10 +40,23 @@ func main() {
 func getAll(c *gin.Context) {
 	var allProducts []models.Product
 
-	if err := db.Find(&allProducts).Error; err != nil {
+	if err = db.Find(&allProducts).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	} else {
 		c.JSON(200, allProducts)
+	}
+}
+
+func getOne(c *gin.Context) {
+	var product models.Product
+	// obtained from router parameter
+	code := c.Param("code")
+
+	if err = db.Where("code = ?", code).First(&product).Error; err != nil {
+		c.String(404, "Not found!")
+		fmt.Println(err)
+	} else {
+		c.JSON(200, product)
 	}
 }
