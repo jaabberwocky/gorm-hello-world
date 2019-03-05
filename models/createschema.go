@@ -5,12 +5,14 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"log"
+	"math/rand"
 	"os"
+	"strconv"
 )
 
 type Product struct {
 	Code  string `gorm:"unique_index; primary_key" json:"code"`
-	Price uint   `json:"price"`
+	Price int    `json:"price"`
 }
 
 // CreateSchema creates schema
@@ -34,17 +36,13 @@ func CreateSchema() {
 	// Migrate the schema
 	db.AutoMigrate(&Product{})
 
-	// Create
-	db.Create(&Product{Code: "L1212", Price: 1000})
-	p := Product{Code: "L44499", Price: 2500}
-	db.Create(&p)
+	fmt.Println("Creating database...")
+	for i := 0; i < 1000; i++ {
+		var p Product
+		p.Code = "L" + strconv.Itoa(i)
+		p.Price = rand.Intn(1000) + 250
+		db.Create(&p)
+	}
 
-	// Read
-	var product Product
-	db.First(&product, 1)                   // find product with id 1
-	db.First(&product, "code = ?", "L1212") // find product with code l1212
-
-	// Update - update product's price to 2000
-	db.Model(&product).Update("Price", 2000)
 	fmt.Println("Created test.db...")
 }
