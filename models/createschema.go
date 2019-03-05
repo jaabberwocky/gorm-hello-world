@@ -1,4 +1,4 @@
-package createschema
+package models
 
 import (
 	"fmt"

@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"gorm-hello-world/createschema"
+	"gorm-hello-world/models"
 )
 
 // Db connection
@@ -13,7 +13,7 @@ var db *gorm.DB
 
 func init() {
 	// createschema is idempotent
-	createschema.CreateSchema()
+	models.CreateSchema()
 
 	var err error
 	db, err = gorm.Open("sqlite3", "test.db")
@@ -37,7 +37,7 @@ func main() {
 }
 
 func getAll(c *gin.Context) {
-	var allProducts []createschema.Product
+	var allProducts []models.Product
 
 	if err := db.Find(&allProducts).Error; err != nil {
 		c.AbortWithStatus(404)
