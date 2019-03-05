@@ -1,4 +1,4 @@
-package main
+package createschema
 
 import (
 	"fmt"
@@ -6,28 +6,29 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"log"
 	"os"
-	"time"
 )
 
 type Product struct {
-	gorm.Model
-	Code  string `gorm:"unique_index; primary_key"`
-	Price uint
+	Code  string `gorm:"unique_index; primary_key" json:"code"`
+	Price uint   `json:"price"`
 }
 
-func main() {
+// CreateSchema creates schema
+func CreateSchema() {
 	cwd, err := os.Getwd()
 	if err != nil {
 		log.Fatal("uh-oh")
 	}
-	fmt.Printf("Current working directory %s", cwd)
+	fmt.Printf("Current working directory %s\n", cwd)
+	fmt.Println("Connecting to db...")
 	db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
 		panic("failed to connect database")
 	}
 	defer db.Close()
 
-	// REMOVE IF NECC: wipe DB
+	// REMOVE IF NECC: wipes DB
+	fmt.Println("Dropping existing table...")
 	db.Exec("DROP TABLE IF EXISTS products;")
 
 	// Migrate the schema
@@ -43,9 +44,7 @@ func main() {
 	db.First(&product, 1)                   // find product with id 1
 	db.First(&product, "code = ?", "L1212") // find product with code l1212
 
-	// sleep then update
-	time.Sleep(5 * time.Second)
 	// Update - update product's price to 2000
 	db.Model(&product).Update("Price", 2000)
-
+	fmt.Println("Created test.db...")
 }
