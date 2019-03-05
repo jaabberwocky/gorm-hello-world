@@ -26,10 +26,8 @@ func init() {
 
 func main() {
 
-	// setup gin
 	router := gin.Default()
 
-	// routes
 	router.GET("/products", getAll)
 	router.GET("/products/:code", getOne)
 
