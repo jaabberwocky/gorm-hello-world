@@ -22,17 +22,18 @@ func CreateSchema() {
 	if err != nil {
 		log.Fatal("uh-oh")
 	}
-	fmt.Printf("Current working directory %s\n", cwd)
+	fmt.Printf("Current working directory: %s\n", cwd)
 	fmt.Println("Connecting to db...")
 	db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
-		panic("failed to connect database")
+		panic("failed to create database file connection")
 	}
 	defer db.Close()
 
 	// REMOVE IF NECC: wipes DB
 	fmt.Println("Dropping existing table...")
 	db.Exec("DROP TABLE IF EXISTS products;")
+	// db inserts here
 
 	// Migrate the schema
 	db.AutoMigrate(&Product{})
