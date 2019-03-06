@@ -18,3 +18,9 @@ The `init()` function creates a `sqlite3` database with randomly generated price
 * `/products`:  [POST] add one product and price
 * `/products` : [PUT] update one product and price
 * `/products/<code>`: [GET] shows price for given product code
+
+## Logs
+
+Logs get saved to `gin.log` in the project directory root.
+
+![logs](pics\logs.PNG)
