@@ -3,13 +3,14 @@ package models
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/sqlite" // used to create schema for sqlite3
 	"log"
 	"math/rand"
 	"os"
 	"strconv"
 )
 
+// Product contains Code and Price
 type Product struct {
 	Code  string `gorm:"unique_index; primary_key" json:"code"`
 	Price int    `json:"price"`
