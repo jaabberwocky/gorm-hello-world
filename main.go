@@ -77,7 +77,7 @@ func getOne(c *gin.Context) {
 	code := c.Param("code")
 
 	if err = db.Where("code = ?", code).First(&product).Error; err != nil {
-		c.String(404, "Not found!")
+		c.JSON(404, gin.H{"error": "not found"})
 		fmt.Println(err)
 	} else {
 		c.JSON(200, product)

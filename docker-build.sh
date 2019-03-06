@@ -1,9 +1,5 @@
 IMAGE="gorm-hello-world"
 VERSION="1.0"
-GOOS="linux"
-
-echo "Building Go binaries..."
-env GOOS=linux go build main.go
 
 echo "Building..."
 docker build -t ${IMAGE}:${VERSION} .
