@@ -23,4 +23,4 @@ The `init()` function creates a `sqlite3` database with randomly generated price
 
 Logs get saved to `gin.log` in the project directory root.
 
-![logs](pics\logs.PNG)
+![logs](pics/logs.PNG)
