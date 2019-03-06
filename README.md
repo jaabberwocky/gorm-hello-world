@@ -15,5 +15,6 @@ The `init()` function creates a `sqlite3` database with randomly generated price
 
 ## Routes
 * `/products/` : [GET] shows all products and prices
+* `/products`:  [POST] add one product and price
+* `/products` : [PUT] update one product and price
 * `/products/<code>`: [GET] shows price for given product code
-* `/products/add`:  [POST] add one product and price

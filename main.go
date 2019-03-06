@@ -51,9 +51,9 @@ func main() {
 	}))
 
 	router.GET("/products", getAll)
+	router.POST("/products", postOne)
+	router.PUT("products", putOne)
 	router.GET("/products/:code", getOne)
-	router.POST("/products/add", postOne)
-	router.PUT("products/update", putOne)
 
 	router.Run(":4531")
 
