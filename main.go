@@ -6,9 +6,11 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"gorm-hello-world/models"
+	"io"
+	"os"
+	"time"
 )
 
-// Db connection
 var db *gorm.DB
 var err error
 
@@ -16,7 +18,6 @@ func init() {
 	// createschema is idempotent
 	models.CreateSchema()
 
-	var err error
 	db, err = gorm.Open("sqlite3", "test.db")
 	if err != nil {
 		panic("failed to connect to database")
@@ -26,7 +27,28 @@ func init() {
 
 func main() {
 
+	// enable logging
+	f, _ := os.Create("gin.log")
+	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+
 	router := gin.Default()
+
+	// middleware for custom log format
+	router.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
+
+		// your custom format
+		return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
+			param.ClientIP,
+			param.TimeStamp.Format(time.RFC1123),
+			param.Method,
+			param.Path,
+			param.Request.Proto,
+			param.StatusCode,
+			param.Latency,
+			param.Request.UserAgent(),
+			param.ErrorMessage,
+		)
+	}))
 
 	router.GET("/products", getAll)
 	router.GET("/products/:code", getOne)
