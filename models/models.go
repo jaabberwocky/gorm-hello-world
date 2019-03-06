@@ -13,7 +13,7 @@ import (
 // Product contains Code and Price
 type Product struct {
 	Code  string `gorm:"unique_index; primary_key" json:"code"`
-	Price int    `json:"price"`
+	Price int    `json:"price,string"`
 }
 
 // CreateSchema creates schema

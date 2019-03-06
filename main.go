@@ -52,6 +52,7 @@ func main() {
 
 	router.GET("/products", getAll)
 	router.GET("/products/:code", getOne)
+	router.POST("/products/add", postOne)
 
 	router.Run(":4531")
 
@@ -79,4 +80,22 @@ func getOne(c *gin.Context) {
 	} else {
 		c.JSON(200, product)
 	}
+}
+
+func postOne(c *gin.Context) {
+	var product models.Product
+
+	if err := c.BindJSON(&product); err != nil {
+		c.JSON(400, gin.H{"error": "invalid input"})
+		return
+	} else {
+		if err := db.Create(&product).Error; err != nil {
+			c.JSON(400, gin.H{"error": "error occured with db creation"})
+			return
+		}
+		c.JSON(200, gin.H{
+			"code":  product.Code,
+			"price": product.Price})
+	}
+
 }

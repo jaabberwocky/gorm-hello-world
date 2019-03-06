@@ -14,5 +14,6 @@ The `init()` function creates a `sqlite3` database with randomly generated price
 `go get github.com/codegangsta/gin` to get live gin-reloading. Run it using `gin -a 4531 main.go`. Any changes will be automatically detected for much faster development.
 
 ## Routes
-* `/products/` : shows all products and prices
-* `/products/<code>`: shows price for given product code
+* `/products/` : [GET] shows all products and prices
+* `/products/<code>`: [GET] shows price for given product code
+* `/products/add`:  [POST] add one product and price
