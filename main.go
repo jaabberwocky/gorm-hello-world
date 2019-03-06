@@ -36,7 +36,7 @@ func main() {
 	// middleware for custom log format
 	router.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 
-		// your custom format
+		// custom format
 		return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
 			param.ClientIP,
 			param.TimeStamp.Format(time.RFC1123),
@@ -53,6 +53,7 @@ func main() {
 	router.GET("/products", getAll)
 	router.GET("/products/:code", getOne)
 	router.POST("/products/add", postOne)
+	router.PUT("products/update", putOne)
 
 	router.Run(":4531")
 
@@ -89,7 +90,7 @@ func postOne(c *gin.Context) {
 	if err := c.BindJSON(&product); err != nil {
 		c.JSON(400, gin.H{"error": "invalid input"})
 		return
-	} 
+	}
 
 	// check if db insert has any error
 	if err := db.Create(&product).Error; err != nil {
@@ -99,6 +100,30 @@ func postOne(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code":  product.Code,
 		"price": product.Price})
-		}
+
+}
+
+func putOne(c *gin.Context) {
+	var product models.Product
+
+	// check if valid JSON
+	if err := c.BindJSON(&product); err != nil {
+		c.JSON(400, gin.H{"error": "invalid input; not JSON"})
+		return
+	}
+
+	if product.Code == "" {
+		c.JSON(400, gin.H{"error": "invalid input; code is empty"})
+		return
+	}
+
+	if err := db.Save(&product).Error; err != nil {
+		c.JSON(400, gin.H{"error": "db error"})
+		return
+	}
+	c.JSON(200, gin.H{
+		"action": "updated",
+		"code":   product.Code,
+		"price":  product.Price})
 
 }
