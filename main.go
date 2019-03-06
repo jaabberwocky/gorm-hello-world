@@ -8,6 +8,7 @@ import (
 	"gorm-hello-world/models"
 	"io"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -94,7 +95,7 @@ func postOne(c *gin.Context) {
 
 	// check if db insert has any error
 	if err := db.Create(&product).Error; err != nil {
-		c.JSON(400, gin.H{"error": "error occured with db creation"})
+		c.JSON(400, gin.H{"error": "code already exists in DB"})
 		return
 	}
 	c.JSON(200, gin.H{
@@ -105,6 +106,7 @@ func postOne(c *gin.Context) {
 
 func putOne(c *gin.Context) {
 	var product models.Product
+	var recordFound bool
 
 	// check if valid JSON
 	if err := c.BindJSON(&product); err != nil {
@@ -117,13 +119,21 @@ func putOne(c *gin.Context) {
 		return
 	}
 
+	u := models.Product{}
+	db.Where("code = ?", product.Code).First(&u)
+	if u.Code == "" {
+		fmt.Println("record not found, will insert...")
+	} else {
+		recordFound = true
+	}
+
 	if err := db.Save(&product).Error; err != nil {
 		c.JSON(400, gin.H{"error": "db error"})
 		return
 	}
 	c.JSON(200, gin.H{
-		"action": "updated",
-		"code":   product.Code,
-		"price":  product.Price})
+		"updated": strconv.FormatBool(recordFound),
+		"code":    product.Code,
+		"price":   product.Price})
 
 }
