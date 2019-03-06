@@ -24,3 +24,6 @@ The `init()` function creates a `sqlite3` database with randomly generated price
 Logs get saved to `gin.log` in the project directory root.
 
 ![logs](pics/logs.PNG)
+
+## Cross-compilation
+For ease of use with slim Linux-based Docker containers, run `set GOARCH=amd64` and `set GOOS=linux` if you are on Windows. Then run `go build` to get the correct binaries.
