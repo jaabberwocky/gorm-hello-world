@@ -1,6 +1,6 @@
 # Go CRUD API
 
-![go report](https://goreportcard.com/badge/github.com/jaabberwocky/gorm-hello-world)
+[<img src="https://goreportcard.com/badge/github.com/jaabberwocky/gorm-hello-world">](https://goreportcard.com/report/github.com/jaabberwocky/gorm-hello-world)
 
 ## Description
 Simple Go example for me to get better acquainted with Go, particularly the Gin framework and the Gorm object relational-mapper.
