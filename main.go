@@ -20,7 +20,7 @@ func init() {
 
 	db, err = gorm.Open("sqlite3", "test.db")
 	if err != nil {
-		panic("failed to connect to database")
+		panic("failed to connect to database!")
 	}
 	fmt.Println("db connection established...")
 }
@@ -85,17 +85,20 @@ func getOne(c *gin.Context) {
 func postOne(c *gin.Context) {
 	var product models.Product
 
+	// check if valid JSON
 	if err := c.BindJSON(&product); err != nil {
 		c.JSON(400, gin.H{"error": "invalid input"})
 		return
-	} else {
-		if err := db.Create(&product).Error; err != nil {
-			c.JSON(400, gin.H{"error": "error occured with db creation"})
-			return
-		}
-		c.JSON(200, gin.H{
-			"code":  product.Code,
-			"price": product.Price})
+	} 
+
+	// check if db insert has any error
+	if err := db.Create(&product).Error; err != nil {
+		c.JSON(400, gin.H{"error": "error occured with db creation"})
+		return
 	}
+	c.JSON(200, gin.H{
+		"code":  product.Code,
+		"price": product.Price})
+		}
 
 }
